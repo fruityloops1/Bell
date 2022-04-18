@@ -24,12 +24,13 @@ export LD	    := 	$(DEVKITPRO)/devkitARM/arm-none-eabi/bin/ld
 # SOURCES is a list of directories containing source code
 # INCLUDES is a list of directories containing header files
 #---------------------------------------------------------------------------------
-TARGET		:=	subsdk1
-GAMEID      :=  0100152000022000
-GVER        :=  200
-BUILD		:=	build$(GVER)
-SOURCES		:=	source
-INCLUDES	:=	include
+TARGET		   := subsdk1
+GAMEID         := 0100152000022000
+GVER           := 200
+BUILD		   := build$(GVER)
+SOURCES		   := source
+INCLUDES       := include include/sead
+TOTALINCLUDES  := $(DEVKITPRO)/devkitARM/arm-none-eabi/include/ $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/ $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/arm-none-eabi
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -68,13 +69,14 @@ SFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 
 export OFILES		:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
-export INCLUDE		:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
+export INCLUDE		:=  $(foreach dir,$(INCLUDES),-I $(CURDIR)/$(dir)) \
+					$(foreach dir,$(TOTALINCLUDES),-isystem $(dir)) \
 					-I$(CURDIR)/$(BUILD)
 
 
 .PHONY: $(BUILD)
 
-all: clean $(BUILD) send
+all: clean $(BUILD) package
 
 #---------------------------------------------------------------------------------
 $(BUILD):
@@ -91,11 +93,28 @@ send:
 	@[ "${FTPUSER}" ] || ( echo "FTP User not set"; exit 1 )
 	@[ "${FTPPASSWORD}" ] || ( echo "FTP Password not set"; exit 1 )
 	@[ "${FTPIP}" ] || ( echo "FTP IP not set"; exit 1 )
-
 	@echo Uploading module
 	@curl -T $(OUTPUT) -u ${FTPUSER}:${FTPPASSWORD} ftp://$(FTPIP):5000/atmosphere/contents/${GAMEID}/exefs/$(TARGET)
 	@echo Uploading patches
 	$(foreach file, $(wildcard $(CURDIR)/$(BUILD)/*.ips), @curl -T $(file) -u ${FTPUSER}:${FTPPASSWORD} ftp://$(FTPIP):5000/atmosphere/exefs_patches/$(notdir $(CURDIR))/$(notdir ${file});)
+
+package:
+	@rm -fr $(CURDIR)/atmosphere
+	@mkdir $(CURDIR)/atmosphere
+	@mkdir $(CURDIR)/atmosphere/contents
+	@mkdir $(CURDIR)/atmosphere/contents/$(GAMEID)
+	@mkdir $(CURDIR)/atmosphere/contents/$(GAMEID)/exefs
+	@mkdir $(CURDIR)/atmosphere/exefs_patches
+	@mkdir $(CURDIR)/atmosphere/exefs_patches/$(notdir $(CURDIR))
+ifneq (,$(wildcard $(CURDIR)/romfs))
+	@cp -r $(CURDIR)/romfs $(CURDIR)/atmosphere/contents/$(GAMEID)/romfs
+endif
+
+	@cp $(OUTPUT) $(CURDIR)/atmosphere/contents/${GAMEID}/exefs/$(TARGET)
+	$(foreach file, $(wildcard $(CURDIR)/$(BUILD)/*.ips), @cp $(file) $(CURDIR)/atmosphere/exefs_patches/$(notdir $(CURDIR))/$(notdir ${file});)
+	@zip -r $(BUILD)/package$(GVER).zip $(CURDIR)/atmosphere/
+	@rm -fr $(CURDIR)/atmosphere/
+
 #---------------------------------------------------------------------------------
 else
  
