@@ -3,13 +3,5 @@ free = 0x004f7bbc - 0x013c5000;
 calloc = 0x004f7bd8 - 0x013c5000;
 realloc = 0x004f7c54 - 0x013c5000;
 aligned_alloc = 0x004f7cac - 0x013c5000;
-_Znwj = 0x00578274 - 0x013c5000;
-_Znaj = 0x005782cc - 0x013c5000;
-_ZnwjRKSt9nothrow_t = 0x00578324 - 0x013c5000;
-_ZnajRKSt9nothrow_t = 0x0057837c - 0x013c5000;
-_ZdlPv = 0x005786a0 - 0x013c5000;
-_ZdaPv = 0x005786fc - 0x013c5000;
-_ZdlPvRKSt9nothrow_t = 0x00578758 - 0x013c5000;
-_ZdaPvRKSt9nothrow_t = 0x005787b4 - 0x013c5000;
 
 _ZN2al20tryGetByamlU8ByIndexEPhRKNS_9ByamlIterEi = 0x0085de1c - 0x013c5000;

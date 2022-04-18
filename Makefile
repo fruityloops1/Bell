@@ -39,7 +39,7 @@ ARCH		:=	--target=armv7l-none-eabihf -mabi=aapcs-linux -mcpu=cortex-a57 -mfpu=cr
 	
 CFLAGS		:=	$(ARCH) $(INCLUDE) -nostdlib
 
-CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions -fpermissive
+CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions -fpermissive -std=gnu++1z
 
 ASFLAGS		:=	$(ARCH)
 
@@ -50,17 +50,17 @@ LDFLAGS		:=	-pie -T $(LINKERSCRIPT) -T $(MAIN_SYMBOLS) -T $(SDK_SYMBOLS)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export LINKERSCRIPT	:=	$(CURDIR)/starlight/application.ld
+export LINKERSCRIPT	    :=	$(CURDIR)/starlight/application.ld
 
-export MAIN_SYMBOLS	:=	$(CURDIR)/patches/syms/$(GVER)/main.sym
+export MAIN_SYMBOLS	    :=	$(CURDIR)/patches/syms/$(GVER)/main.sym
 
-export SDK_SYMBOLS	:=	$(CURDIR)/patches/syms/$(GVER)/sdk.sym
+export SDK_SYMBOLS    	:=	$(CURDIR)/patches/syms/$(GVER)/sdk.sym
 
-export OUTPUT		:=	$(CURDIR)/$(BUILD)/$(notdir $(CURDIR))$(GVER)
+export OUTPUT		    :=	$(CURDIR)/$(BUILD)/$(notdir $(CURDIR))$(GVER)
 
-export VPATH		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
+export VPATH	    	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 
-export DEPSDIR		:=	$(CURDIR)/$(BUILD)
+export DEPSDIR	    	:=	$(CURDIR)/$(BUILD)
 
 CFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
@@ -124,10 +124,10 @@ else
 
 $(OUTPUT).sym : $(OUTPUT).elf
 	$(OBJDUMP) -t $< > $@
-	@echo Symbol table written to $(notdir $@)
+	@echo Symbol map written to $(notdir $@)
 
 #---------------------------------------------------------------------------------
-%.elf: $(OFILES)	
+%.elf: $(OFILES)
 	@echo Linking $(notdir $@)
 	$(LD) $(LDFLAGS) $(OFILES) -o $@
 
