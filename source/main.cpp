@@ -3,7 +3,6 @@
 namespace al {
 class ByamlIter {
 };
-
 bool tryGetByamlU8ByIndex(unsigned char*, const al::ByamlIter&, int);
 }
 
