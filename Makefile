@@ -30,7 +30,7 @@ GVER           := 200
 BUILD		   := build$(GVER)
 SOURCES		   := source
 INCLUDES       := include include/sead
-TOTALINCLUDES  := $(DEVKITPRO)/devkitARM/arm-none-eabi/include/ $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/ $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/arm-none-eabi
+TOTALINCLUDES  := $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/ $(DEVKITPRO)/devkitARM/arm-none-eabi/include/c++/11.2.0/arm-none-eabi $(DEVKITPRO)/devkitARM/arm-none-eabi/include/
 
 #---------------------------------------------------------------------------------
 # options for code generation

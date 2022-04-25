@@ -1,13 +1,23 @@
-#include <nn/fs.h>
+#include <cmath>
+#include <sead/math/seadVector.h>
 
-namespace al {
-class ByamlIter;
-bool tryGetByamlU8ByIndex(unsigned char* out, const ByamlIter& iter, int index);
+constexpr float fovy = 45.0f;
+
+float getFovyHook()
+{
+    return fovy;
 }
 
-void testHook(unsigned char* out, const al::ByamlIter& iter, int index)
+// should be in a seperate header and proper namespace never do this please
+struct PerspectiveProjection {
+    u8 _0[0x9C];
+    float fovy;
+    sead::Vector3f fovyVec;
+};
+
+void setFovy_Hook(PerspectiveProjection& dis, float x)
 {
-    al::tryGetByamlU8ByIndex(out, iter, index);
-    int* d = new int;
-    delete d;
+    dis.fovy = fovy;
+    dis.fovyVec = { std::sin(fovy), std::cos(fovy), std::tan(fovy) };
+    dis._0[4] = 1;
 }

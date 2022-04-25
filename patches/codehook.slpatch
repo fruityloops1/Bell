@@ -1,3 +1,11 @@
 [version=200, target=main]
-0798d94:
-    bl testHook
+059b4cc:
+    b getFovyHook
+059b380:
+    b getFovyHook
+059b14c:
+    b getFovyHook
+059ad50:
+    b getFovyHook
+059abbc:
+    b setFovy_Hook
